@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Record extends Model
 {
@@ -24,18 +25,23 @@ class Record extends Model
             ->limit(1);
     }
 
+    public function scopeSameHost($query, Record $record){
+        return $this->where('host_id', $record->host_id);
+    }
+
     public function scopeBeforeDate($query, $date)
     {
-        return $this->where('created_at','<', $data);
+        return $this->where('created_at','<', $date);
     }
 
     public function scopeBeforeRecord($query, Record $record)
     {
-        return $this->beforeDate($record->created_at);
+        $date = $record->created_at ?: Carbon::now();
+        return $this->beforeDate($date);
     }
 
     public function previous()
     {
-        return static::beforeRecord($this)->last();
+        return static::sameHost($this)->beforeRecord($this)->last();
     }
 }
