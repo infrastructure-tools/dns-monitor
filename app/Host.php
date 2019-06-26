@@ -45,7 +45,7 @@ class Host extends Model
 
     public function scopeHostnameIn($query, $hostnames)
     {
-        return $this
+        return $query
             ->whereIn('hostnames', (array)$hostnames);
     }
 }
