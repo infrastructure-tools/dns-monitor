@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Record;
+use DB;
 
 class RecordObserver
 {
@@ -26,7 +27,12 @@ class RecordObserver
         array_walk($currentData, 'App\Observers\RecordObserver::jsonEncode');
         $removed = array_diff($previousData, $currentData);
         $added = array_diff($currentData, $previousData);
-        var_dump($removed, $added);
+
+        if(!$added && !$removed) {
+            return true;
+        }
+
+        var_dump($record->host->hostname, $removed, $added);
     }
 
     private function jsonEncode(&$value) {
